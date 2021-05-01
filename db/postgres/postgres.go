@@ -6,9 +6,9 @@ import (
 
 var Db *pg.DB
 
-func New() {
+func New(address string) {
 	Db = pg.Connect(&pg.Options{
-		Addr:     "127.0.0.1:5431",
+		Addr:     address,
 		User:     "postgres",
 		Password: "dbpass",
 		Database: "timerdb",

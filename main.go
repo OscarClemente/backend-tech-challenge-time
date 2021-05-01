@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/OscarClemente/backend-tech-challenge-time/db/migration"
 	"github.com/OscarClemente/backend-tech-challenge-time/db/postgres"
 	"github.com/OscarClemente/backend-tech-challenge-time/graph"
@@ -16,16 +15,23 @@ import (
 )
 
 const defaultPort = "8080"
+const defaultDbAddress = "postgres:5432"
 
 func main() {
-	postgres.New()
-	migration.CreateSchema()
-	migration.PopulateWithTestData()
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
+
+	dbAddress := os.Getenv("DB_ADDRESS")
+	if dbAddress == "" {
+		dbAddress = defaultDbAddress
+	}
+
+	postgres.New(dbAddress)
+	migration.CreateSchema()
+	migration.PopulateWithTestData()
 
 	router := chi.NewRouter()
 	router.Use(cors.New(cors.Options{
@@ -36,9 +42,10 @@ func main() {
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 
-	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	// router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+	// log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+	log.Printf("Serving at port: %s", port)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }

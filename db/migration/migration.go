@@ -43,20 +43,36 @@ func PopulateWithTestData() error {
 
 	log.Println("Adding timers")
 
+	now := time.Now()
+
 	timer1 := timers.Timer{
-		Title:       "Test timer 1",
+		Title:       "Today's session",
 		TimeElapsed: 65371,
-		CreatedAt:   time.Now(),
+		CreatedAt:   now,
 	}
 
 	timer2 := timers.Timer{
-		Title:       "Test timer 2",
-		TimeElapsed: 1275,
-		CreatedAt:   time.Date(2020, 1, 1, 12, 0, 0, 0, time.UTC),
+		Title:       "Yesterday's session",
+		TimeElapsed: 12751,
+		CreatedAt:   now.AddDate(0, 0, -1),
+	}
+
+	timer3 := timers.Timer{
+		Title:       "May 1st session",
+		TimeElapsed: 42753,
+		CreatedAt:   time.Date(2021, 5, 1, 10, 0, 0, 0, time.UTC),
+	}
+
+	timer4 := timers.Timer{
+		Title:       "March's session",
+		TimeElapsed: 81275,
+		CreatedAt:   time.Date(2021, 3, 1, 10, 0, 0, 0, time.UTC),
 	}
 
 	_, err = postgres.Db.Model(&timer1).Insert()
 	_, err = postgres.Db.Model(&timer2).Insert()
+	_, err = postgres.Db.Model(&timer3).Insert()
+	_, err = postgres.Db.Model(&timer4).Insert()
 
 	err = postgres.Db.Model(&timersInDb).Select()
 	if err != nil {
