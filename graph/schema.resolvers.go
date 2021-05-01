@@ -6,9 +6,11 @@ package graph
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/OscarClemente/backend-tech-challenge-time/graph/generated"
 	"github.com/OscarClemente/backend-tech-challenge-time/graph/model"
+	"github.com/OscarClemente/backend-tech-challenge-time/model/timers"
 )
 
 func (r *mutationResolver) CreateTimer(ctx context.Context, title string) (*model.Timer, error) {
@@ -24,7 +26,20 @@ func (r *mutationResolver) DeleteTimer(ctx context.Context, id string) (int, err
 }
 
 func (r *queryResolver) Timers(ctx context.Context) ([]*model.Timer, error) {
-	panic(fmt.Errorf("not implemented"))
+	internalTimers := timers.GetTimers()
+	var timersResponse []*model.Timer
+
+	for _, t := range internalTimers {
+		timer := model.Timer{
+			ID:          strconv.Itoa(t.Id),
+			Title:       t.Title,
+			TimeElapsed: t.TimeElapsed,
+			CreatedAt:   t.CreatedAt,
+		}
+
+		timersResponse = append(timersResponse, &timer)
+	}
+	return timersResponse, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
