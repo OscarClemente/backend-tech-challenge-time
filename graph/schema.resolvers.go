@@ -13,22 +13,27 @@ import (
 	"github.com/OscarClemente/backend-tech-challenge-time/model/timers"
 )
 
-func (r *mutationResolver) CreateTimer(ctx context.Context, title string) (*model.Timer, error) {
-	internalTimer := timers.Timer{
-		Title: title,
-		// Other values are initialized by db
-	}
-
-	internalTimer, err := internalTimer.Save()
-
-	timer := model.Timer{
+func timerToGraphql(internalTimer *timers.Timer) *model.Timer {
+	timer := &model.Timer{
 		ID:          strconv.Itoa(internalTimer.Id),
 		Title:       internalTimer.Title,
 		TimeElapsed: internalTimer.TimeElapsed,
 		CreatedAt:   internalTimer.CreatedAt,
 	}
 
-	return &timer, err
+	return timer
+}
+
+func (r *mutationResolver) CreateTimer(ctx context.Context, title string) (*model.Timer, error) {
+	internalTimer := &timers.Timer{
+		Title: title,
+		// Other values are initialized by db
+	}
+
+	err := internalTimer.Save()
+	timer := timerToGraphql(internalTimer)
+
+	return timer, err
 }
 
 func (r *mutationResolver) UpdateTimer(ctx context.Context, input model.UpdatedTimer) (*model.Timer, error) {
@@ -36,32 +41,29 @@ func (r *mutationResolver) UpdateTimer(ctx context.Context, input model.UpdatedT
 	if err != nil {
 		panic(err)
 	}
-	internalTimer := timers.Timer{
+
+	internalTimer := &timers.Timer{
 		Id:          internalId,
 		Title:       input.Title,
 		TimeElapsed: input.TimeElapsed,
 	}
 
-	internalTimer, err = internalTimer.Update()
+	err = internalTimer.Update()
+	timer := timerToGraphql(internalTimer)
 
-	timer := model.Timer{
-		ID:          strconv.Itoa(internalTimer.Id),
-		Title:       internalTimer.Title,
-		TimeElapsed: internalTimer.TimeElapsed,
-		CreatedAt:   internalTimer.CreatedAt,
-	}
-
-	return &timer, err
+	return timer, err
 }
 
 func (r *mutationResolver) DeleteTimer(ctx context.Context, id string) (bool, error) {
 	internalId, err := strconv.Atoi(id)
+
 	if err != nil {
 		log.Println(err)
 		return false, err
 	}
 
 	err = timers.DeleteTimer(internalId)
+
 	return err == nil, err
 }
 
@@ -70,15 +72,10 @@ func (r *queryResolver) Timers(ctx context.Context) ([]*model.Timer, error) {
 	var timersResponse []*model.Timer
 
 	for _, t := range internalTimers {
-		timer := model.Timer{
-			ID:          strconv.Itoa(t.Id),
-			Title:       t.Title,
-			TimeElapsed: t.TimeElapsed,
-			CreatedAt:   t.CreatedAt,
-		}
-
-		timersResponse = append(timersResponse, &timer)
+		timer := timerToGraphql(&t)
+		timersResponse = append(timersResponse, timer)
 	}
+
 	return timersResponse, nil
 }
 
