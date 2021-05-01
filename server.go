@@ -7,6 +7,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/OscarClemente/backend-tech-challenge-time/db/migration"
 	"github.com/OscarClemente/backend-tech-challenge-time/db/postgres"
 	"github.com/OscarClemente/backend-tech-challenge-time/graph"
 	"github.com/OscarClemente/backend-tech-challenge-time/graph/generated"
@@ -16,6 +17,8 @@ const defaultPort = "8080"
 
 func main() {
 	postgres.New()
+	migration.CreateSchema()
+	migration.PopulateWithTestData()
 
 	port := os.Getenv("PORT")
 	if port == "" {
