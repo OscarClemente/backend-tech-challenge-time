@@ -1,0 +1,24 @@
+scalar Time
+
+type Timer {
+  id: ID!
+  title: String!
+  timeElapsed: Int!
+  createdAt: Time!
+}
+
+type Query {
+  timers: [Timer!]!
+}
+
+input UpdatedTimer {
+  id: ID!
+  title: String
+  timeElapsed: Int
+}
+
+type Mutation {
+  createTimer(title: String!): Timer!
+  updateTimer(input: UpdatedTimer!): Timer!
+  deleteTimer(id: ID!): Int!
+}
