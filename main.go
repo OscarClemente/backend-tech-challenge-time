@@ -35,7 +35,7 @@ func main() {
 
 	router := chi.NewRouter()
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:5000"},
+		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:5000", "http://0.0.0.0:5000"},
 		AllowCredentials: true,
 		Debug:            false,
 	}).Handler)
@@ -46,6 +46,6 @@ func main() {
 	router.Handle("/query", srv)
 
 	// log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Printf("Serving at port: %s", port)
+	log.Printf("Serving at /query in port: %s", port)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
