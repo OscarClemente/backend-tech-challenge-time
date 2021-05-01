@@ -7,6 +7,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/OscarClemente/backend-tech-challenge-time/db/postgres"
 	"github.com/OscarClemente/backend-tech-challenge-time/graph"
 	"github.com/OscarClemente/backend-tech-challenge-time/graph/generated"
 )
@@ -14,6 +15,8 @@ import (
 const defaultPort = "8080"
 
 func main() {
+	postgres.New()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
