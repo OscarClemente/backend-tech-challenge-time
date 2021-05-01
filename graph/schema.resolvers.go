@@ -1,3 +1,4 @@
+// package graph provides an entrance to GraphQl queries and mutations to e processed
 package graph
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
@@ -13,6 +14,7 @@ import (
 	"github.com/OscarClemente/backend-tech-challenge-time/model/timers"
 )
 
+// timerToGraphql translates an internal timers.Timer into a GraphQl model.Timer
 func timerToGraphql(internalTimer *timers.Timer) *model.Timer {
 	timer := &model.Timer{
 		ID:          strconv.Itoa(internalTimer.Id),

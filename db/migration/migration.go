@@ -1,3 +1,4 @@
+// package migration provides schema and default values for the db
 package migration
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/go-pg/pg/v10/orm"
 )
 
+// CreateSchema creates the timers table in the database
 func CreateSchema() error {
 	models := []interface{}{
 		(*timers.Timer)(nil),
@@ -27,6 +29,7 @@ func CreateSchema() error {
 	return nil
 }
 
+// PopulateWithTestData populates an empty database with test values
 func PopulateWithTestData() error {
 	var timersInDb []timers.Timer
 	err := postgres.Db.Model(&timersInDb).Select()
