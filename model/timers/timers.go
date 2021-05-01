@@ -27,6 +27,20 @@ func (timer Timer) Save() (Timer, error) {
 	return timer, err
 }
 
+func (timer Timer) Update() (Timer, error) {
+	_, err := postgres.Db.Model(&timer).WherePK().Column("title", "time_elapsed").Update()
+	if err != nil {
+		panic(err)
+	}
+
+	err = postgres.Db.Model(&timer).WherePK().Select()
+	if err != nil {
+		panic(err)
+	}
+
+	return timer, err
+}
+
 func GetTimers() []Timer {
 	var timers []Timer
 	err := postgres.Db.Model(&timers).Select()

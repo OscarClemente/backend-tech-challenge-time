@@ -14,7 +14,7 @@ type Timer struct {
 }
 
 type UpdatedTimer struct {
-	ID          string  `json:"id"`
-	Title       *string `json:"title"`
-	TimeElapsed *int    `json:"timeElapsed"`
+	ID          string `json:"id"`
+	Title       string `json:"title"`
+	TimeElapsed int    `json:"timeElapsed"`
 }

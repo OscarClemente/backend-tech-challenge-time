@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strconv"
 
@@ -33,7 +32,26 @@ func (r *mutationResolver) CreateTimer(ctx context.Context, title string) (*mode
 }
 
 func (r *mutationResolver) UpdateTimer(ctx context.Context, input model.UpdatedTimer) (*model.Timer, error) {
-	panic(fmt.Errorf("not implemented"))
+	internalId, err := strconv.Atoi(input.ID)
+	if err != nil {
+		panic(err)
+	}
+	internalTimer := timers.Timer{
+		Id:          internalId,
+		Title:       input.Title,
+		TimeElapsed: input.TimeElapsed,
+	}
+
+	internalTimer, err = internalTimer.Update()
+
+	timer := model.Timer{
+		ID:          strconv.Itoa(internalTimer.Id),
+		Title:       internalTimer.Title,
+		TimeElapsed: internalTimer.TimeElapsed,
+		CreatedAt:   internalTimer.CreatedAt,
+	}
+
+	return &timer, err
 }
 
 func (r *mutationResolver) DeleteTimer(ctx context.Context, id string) (bool, error) {

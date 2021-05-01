@@ -236,8 +236,8 @@ type Query {
 
 input UpdatedTimer {
   id: ID!
-  title: String
-  timeElapsed: Int
+  title: String!
+  timeElapsed: Int!
 }
 
 type Mutation {
@@ -1827,7 +1827,7 @@ func (ec *executionContext) unmarshalInputUpdatedTimer(ctx context.Context, obj 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-			it.Title, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -1835,7 +1835,7 @@ func (ec *executionContext) unmarshalInputUpdatedTimer(ctx context.Context, obj 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("timeElapsed"))
-			it.TimeElapsed, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			it.TimeElapsed, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -2607,21 +2607,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
-}
-
-func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := graphql.UnmarshalInt(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return graphql.MarshalInt(*v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

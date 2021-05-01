@@ -13,8 +13,8 @@ type Query {
 
 input UpdatedTimer {
   id: ID!
-  title: String
-  timeElapsed: Int
+  title: String!
+  timeElapsed: Int!
 }
 
 type Mutation {
