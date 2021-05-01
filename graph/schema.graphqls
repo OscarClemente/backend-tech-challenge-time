@@ -20,5 +20,5 @@ input UpdatedTimer {
 type Mutation {
   createTimer(title: String!): Timer!
   updateTimer(input: UpdatedTimer!): Timer!
-  deleteTimer(id: ID!): Int!
+  deleteTimer(id: ID!): Boolean!
 }

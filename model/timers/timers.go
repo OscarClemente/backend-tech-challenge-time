@@ -14,8 +14,17 @@ type Timer struct {
 	CreatedAt   time.Time `pg:"default:now()"`
 }
 
-func (t Timer) String() string {
-	return fmt.Sprintf("Timer<%d %s %d>", t.Id, t.Title, t.TimeElapsed)
+func (timer Timer) String() string {
+	return fmt.Sprintf("Timer<%d %s %d>", timer.Id, timer.Title, timer.TimeElapsed)
+}
+
+func (timer Timer) Save() (Timer, error) {
+	_, err := postgres.Db.Model(&timer).Insert()
+	if err != nil {
+		panic(err)
+	}
+
+	return timer, err
 }
 
 func GetTimers() []Timer {
@@ -26,4 +35,13 @@ func GetTimers() []Timer {
 	}
 
 	return timers
+}
+
+func DeleteTimer(id int) error {
+	_, err := postgres.Db.Exec("DELETE FROM timers WHERE id = ?", id)
+	if err != nil {
+		panic(err)
+	}
+
+	return err
 }

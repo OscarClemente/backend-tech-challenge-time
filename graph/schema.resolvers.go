@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/OscarClemente/backend-tech-challenge-time/graph/generated"
@@ -14,15 +15,36 @@ import (
 )
 
 func (r *mutationResolver) CreateTimer(ctx context.Context, title string) (*model.Timer, error) {
-	panic(fmt.Errorf("not implemented"))
+	internalTimer := timers.Timer{
+		Title: title,
+		// Other values are initialized by db
+	}
+
+	internalTimer, err := internalTimer.Save()
+
+	timer := model.Timer{
+		ID:          strconv.Itoa(internalTimer.Id),
+		Title:       internalTimer.Title,
+		TimeElapsed: internalTimer.TimeElapsed,
+		CreatedAt:   internalTimer.CreatedAt,
+	}
+
+	return &timer, err
 }
 
 func (r *mutationResolver) UpdateTimer(ctx context.Context, input model.UpdatedTimer) (*model.Timer, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *mutationResolver) DeleteTimer(ctx context.Context, id string) (int, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) DeleteTimer(ctx context.Context, id string) (bool, error) {
+	internalId, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println(err)
+		return false, err
+	}
+
+	err = timers.DeleteTimer(internalId)
+	return err == nil, err
 }
 
 func (r *queryResolver) Timers(ctx context.Context) ([]*model.Timer, error) {

@@ -65,7 +65,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	CreateTimer(ctx context.Context, title string) (*model.Timer, error)
 	UpdateTimer(ctx context.Context, input model.UpdatedTimer) (*model.Timer, error)
-	DeleteTimer(ctx context.Context, id string) (int, error)
+	DeleteTimer(ctx context.Context, id string) (bool, error)
 }
 type QueryResolver interface {
 	Timers(ctx context.Context) ([]*model.Timer, error)
@@ -243,7 +243,7 @@ input UpdatedTimer {
 type Mutation {
   createTimer(title: String!): Timer!
   updateTimer(input: UpdatedTimer!): Timer!
-  deleteTimer(id: ID!): Int!
+  deleteTimer(id: ID!): Boolean!
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -471,9 +471,9 @@ func (ec *executionContext) _Mutation_deleteTimer(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_timers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
