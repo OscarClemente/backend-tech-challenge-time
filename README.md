@@ -17,6 +17,7 @@ for quick testing of the backend.
 ## Notes
 * Due to trying to finish this app in one day, no unit testing was done (integration testing is available, refer to [tech-challenge-time](https://github.com/OscarClemente/tech-challenge-time/tree/main)) and some values are still hardcoded.
 * There is a sleep in main so this go app loads after postgres docker has loaded, this is an ugly and dirty solution, ideally scripts should be used between docker containers to perform a status check.
+* Some values are hardcoded, such as DB table and password. They could be easily "softcoded" but I decided to focus on other things during the one day alloted time.
 
 ## Execute
 Refer to [tech-challenge-time](https://github.com/OscarClemente/tech-challenge-time/tree/main) to execute the full app.
